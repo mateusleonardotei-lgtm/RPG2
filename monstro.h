@@ -10,7 +10,7 @@
 #define MAX_HABILIDADES 10
 #define MAX_TESOUROS 20
 #define MAX_MOD_TERRENOS 8
-#define MAX_MONSTROS 50
+
 
 typedef struct {
     int quantidade;
@@ -259,11 +259,10 @@ int converteListaTesouros(const char *texto, Tesouro tesouros[], int *quantidade
 int converteTextoModificadorTerreno(const char *texto, ModificadorTerreno *modificador);
 int converteListaModificadoresTerreno(const char *texto, ModificadorTerreno modificadores[], int *quantidade);
 int copiarTextoSeguro(char *destino, size_t capacidade, const char *origem);
-int carregarBestiario(const char *nomeArquivo, Monstro monstros[], int capacidade, int *quantidade);
 int separarChaveValor(const char *linha, char *chave, size_t capacidadeChave, char *valor, size_t capacidadeValor);
 int testarLeituraBestiario(const char *nomeArquivo);
 int processarCampoMonstro(Monstro *monstro, const char *chave, const char *valor);
-int carregarBestiario(const char *nomeArquivo, Monstro monstros[], int capacidade, int *quantidade);
+
 
 const char *atividadeParaTexto(Atividade atividade);
 const char *frequenciaParaTexto(Frequencia frequencia); 
