@@ -233,6 +233,7 @@ void removerQuebraLinha(char *texto);
 
 int converteTextoDado(const char *texto, Dado *dado);
 int validaDado(Dado dado);
+int validaMonstro(const Monstro *monstro);
 int converteTextoFrequencia(const char *texto, Frequencia *frequencia);
 int converteTextoAtividade(const char *texto, Atividade *atividade);
 int converteTextoTerreno(const char *texto, Terreno *terreno);

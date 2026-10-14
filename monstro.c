@@ -2,6 +2,9 @@
 #include "monstro.h"
 #include <string.h>
 
+//------------------------------------------------------------
+// Função para validar um dado
+
 int validaDado(Dado dado)
 {
     if (dado.quantidade <= 0)
@@ -16,6 +19,9 @@ int validaDado(Dado dado)
 
     return 1;
 }
+
+//------------------------------------------------------------
+// Função para validar um monstro
 
 int converteTextoDado(const char *texto, Dado *dado)
 {
@@ -75,6 +81,9 @@ int converteTextoDado(const char *texto, Dado *dado)
     return 1;
 }
 
+//------------------------------------------------------------
+// dadoParaTexto: Converte um dado para uma representação em texto
+
 void dadoParaTexto(Dado dado, char *destino, int tamanho)
 {
     if (destino == NULL || tamanho <= 0)
@@ -101,6 +110,9 @@ void dadoParaTexto(Dado dado, char *destino, int tamanho)
         snprintf(destino, tamanho, "%dd%d", dado.quantidade, dado.faces);
     }
 }
+
+//------------------------------------------------------------
+// textofrequencia: Converte uma frequência para uma representação em texto
 
 int converteTextoFrequencia(const char *texto, Frequencia *frequencia)
 {
@@ -137,6 +149,9 @@ int converteTextoFrequencia(const char *texto, Frequencia *frequencia)
     return 1;
 }
 
+//------------------------------------------------------------
+// frequenciaParaTexto: Converte uma frequência para uma representação em texto
+
 const char *frequenciaParaTexto(Frequencia frequencia)
 {
     switch (frequencia)
@@ -160,6 +175,8 @@ const char *frequenciaParaTexto(Frequencia frequencia)
         return "INVALIDO";
     }
 }
+
+//
 
 int converteTextoAtividade(const char *texto, Atividade *atividade)
 {
@@ -2267,6 +2284,298 @@ int processarCampoMonstro(Monstro *monstro, const char *chave, const char *valor
     else
     {
         printf("Campo desconhecido: %s\n", chave);
+        return 0;
+    }
+
+    return 1;
+}
+
+
+int validaMonstro(const Monstro *monstro)
+{
+    if (monstro == NULL) {
+        printf("Erro: monstro nulo!\n");
+        return 0;
+    }
+
+    // IDENTIFICACAO
+
+    if (monstro->id <= 0) {
+        printf("Erro: ID deve ser positivo!\n");
+        return 0;
+    }
+
+    if (monstro->nome[0] == '\0') {
+        printf("Erro: nome nao pode ser vazio!\n");
+        return 0;
+    }
+
+    // FREQUENCIA
+
+    if (monstro->frequencia < MUITO_RARO || monstro->frequencia > MUITO_COMUM) {
+
+        printf("Erro: frequencia invalida!\n");
+        return 0;
+    }
+
+    // DADOS
+
+    if (!validaDado(monstro->numeroEncontrado)) {
+        printf("Erro: numero encontrado invalido!\n");
+        return 0;
+    }
+
+    if (!validaDado(monstro->dv)) {
+        printf("Erro: dados de vida invalidos!\n");
+        return 0;
+    }
+
+    // COVIL
+
+    if (monstro->covil.minimo < 0 || monstro->covil.maximo < monstro->covil.minimo) {
+
+        printf("Erro: intervalo do covil invalido!\n");
+        return 0;
+    }
+
+    // CLIMAS
+
+    if (monstro->quantidadeClimas < 0 || monstro->quantidadeClimas > MAX_CLIMAS) {
+
+        printf("Erro: quantidade de climas invalida!\n");
+        return 0;
+    }
+
+    for (int i = 0; i < monstro->quantidadeClimas; i++) {
+
+        if (monstro->climas[i] < QUALQUER || monstro->climas[i] > POLAR) {
+
+            printf("Erro: clima invalido!\n");
+            return 0;
+        }
+    }
+
+    // TERRENOS
+
+    if (monstro->quantidadeTerrenos < 1 || monstro->quantidadeTerrenos > MAX_TERRENOS) {
+
+        printf("Erro: quantidade de terrenos invalida!\n");
+        return 0;
+    }
+
+    for (int i = 0; i < monstro->quantidadeTerrenos; i++) {
+
+        if (monstro->terrenos[i] < FLORESTA || monstro->terrenos[i] > URBANO) {
+
+            printf("Erro: terreno invalido!\n");
+            return 0;
+        }
+    }
+
+    // ATIVIDADE
+
+    if (monstro->atividade < DIURNO || monstro->atividade > QUALQUER_HORARIO) {
+
+        printf("Erro: atividade invalida!\n");
+        return 0;
+    }
+
+    // INTELIGENCIA
+
+    if (monstro->inteligencia < 0) {
+        printf("Erro: inteligencia invalida!\n");
+        return 0;
+    }
+
+    // TENDENCIA
+
+    if (monstro->tendencia.ordem < LEAL || monstro->tendencia.ordem > CAOTICO) {
+
+        printf("Erro: eixo de ordem invalido!\n");
+        return 0;
+    }
+
+    if (monstro->tendencia.moral < BOM || monstro->tendencia.moral > MAU) {
+
+        printf("Erro: eixo moral invalido!\n");
+        return 0;
+    }
+
+    // RESISTENCIA A MAGIA
+
+    if (monstro->resistenciaMagia < 0 || monstro->resistenciaMagia > 100) {
+
+        printf("Erro: resistencia a magia deve estar entre 0 e 100!\n");
+        return 0;
+    }
+
+    // MOVIMENTOS
+
+    if (monstro->quantidadeMovimentos < 1 || monstro->quantidadeMovimentos > MAX_MOVIMENTOS) {
+
+        printf("Erro: quantidade de movimentos invalida!\n");
+        return 0;
+    }
+
+    for (int i = 0; i < monstro->quantidadeMovimentos; i++) {
+
+        if (monstro->movimentos[i].tipo < TERRESTRE || monstro->movimentos[i].tipo > ESCAVACAO) {
+
+            printf("Erro: tipo de movimento invalido!\n");
+            return 0;
+        }
+
+        if (monstro->movimentos[i].velocidade < 0) {
+
+            printf("Erro: velocidade de movimento invalida!\n");
+            return 0;
+        }
+    }
+
+    // ATAQUES
+
+    if (monstro->quantidadeAtaques < 1 || monstro->quantidadeAtaques > MAX_ATAQUES) {
+
+        printf("Erro: quantidade de ataques invalida!\n");
+        return 0;
+    }
+
+    for (int i = 0; i < monstro->quantidadeAtaques; i++) {
+
+        if (monstro->ataques[i].nome[0] == '\0') {
+
+            printf("Erro: ataque sem nome!\n");
+            return 0;
+        }
+
+        if (!validaDado(monstro->ataques[i].dano)) {
+
+            printf("Erro: dano do ataque invalido!\n");
+            return 0;
+        }
+    }
+
+    // HABILIDADES ESPECIAIS
+
+    if (monstro->quantidadeAtaquesEspeciais < 0 || monstro->quantidadeAtaquesEspeciais > MAX_HABILIDADES) {
+
+        printf("Erro: quantidade de ataques especiais invalida!\n");
+        return 0;
+    }
+
+    if (monstro->quantidadeDefesasEspeciais < 0 || monstro->quantidadeDefesasEspeciais > MAX_HABILIDADES) {
+
+        printf("Erro: quantidade de defesas especiais invalida!\n");
+        return 0;
+    }
+
+    // TESOUROS
+
+    if (monstro->quantidadeTesouros < 0 || monstro->quantidadeTesouros > MAX_TESOUROS) {
+
+        printf("Erro: quantidade de tesouros invalida!\n");
+        return 0;
+    }
+
+    // ALTURA
+
+    if (monstro->altura.minimo < 0 || monstro->altura.maximo < monstro->altura.minimo) {
+
+        printf("Erro: intervalo de altura invalido!\n");
+        return 0;
+    }
+
+    // EXPERIENCIA
+
+    if (monstro->xp < 0) {
+
+        printf("Erro: XP nao pode ser negativo!\n");
+        return 0;
+    }
+
+    // PODER E GRUPOS
+
+    if (monstro->poderBase < 0) {
+
+        printf("Erro: poder base invalido!\n");
+        return 0;
+    }
+
+    if (monstro->quantidadeModificadoresTerreno < 0 ||
+        monstro->quantidadeModificadoresTerreno > MAX_MOD_TERRENOS) {
+
+        printf("Erro: quantidade de modificadores de terreno invalida!\n");
+        return 0;
+    }
+
+    if (monstro->limiteGrupoGrande < 0) {
+
+        printf("Erro: limite de grupo grande invalido!\n");
+        return 0;
+    }
+
+    // ORGANIZACAO
+
+    if (monstro->organizacao < SOLITARIO ||
+        monstro->organizacao > CORTE)
+    {
+
+        printf("Erro: organizacao invalida!\n");
+        return 0;
+    }
+
+    // DIETA
+
+    if (monstro->dieta < CARNIVORO ||
+        monstro->dieta > PARASITA)
+    {
+
+        printf("Erro: dieta invalida!\n");
+        return 0;
+    }
+
+    // TAMANHO
+
+    if (monstro->tamanho < PEQUENO ||
+        monstro->tamanho > ENORME)
+    {
+
+        printf("Erro: tamanho invalido!\n");
+        return 0;
+    }
+
+    // CLASSIFICACAO MORAL
+
+    if (monstro->classificacaoMoral < INSTAVEL ||
+        monstro->classificacaoMoral > FANATICO)
+    {
+
+        printf("Erro: classificacao moral invalida!\n");
+        return 0;
+    }
+
+    // CLASSE DE ARMADURA E THAC0
+
+    if (monstro->ca < -10 || monstro->ca > 20)
+    {
+
+        printf("Erro: classe de armadura fora da faixa adotada!\n");
+        return 0;
+    }
+
+    if (monstro->thac0 < 0 || monstro->thac0 > 20)
+    {
+
+        printf("Erro: THAC0 fora da faixa adotada!\n");
+        return 0;
+    }
+
+    // MORAL
+
+    if (monstro->moral < 0 || monstro->moral > 20)
+    {
+
+        printf("Erro: moral fora da faixa adotada!\n");
         return 0;
     }
 

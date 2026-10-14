@@ -1,1 +1,1 @@
-gcc -std=c11 -Wall -Wextra -pedantic main.c monstro.c -o bestiario
+gcc -std=c11 -Wall -Wextra -pedantic main.c monstro.c bestiario.c -o bestiario
